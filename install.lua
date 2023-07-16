@@ -1,19 +1,24 @@
 #!/usr/bin/lua
 
-local user_name = "ivan"
+local user_name = ""
 
 ------------------------------------------
 -- Checking if install option is chosen --
 ------------------------------------------
 
 if arg[1] == nil or #arg > 1 then
-    print("Exiting...")
+    print("Install option hasn't been chosen.\nExiting...")
     os.exit()
 end
 
--------------------------------
+if user_name == "" then
+    print("User name was not set.\nExiting...")
+    os.exit()
+end
+
+----------------------
 -- Helper functions --
--------------------------------
+----------------------
 
 local function has_access()
     local handle = io.popen("id -u")
@@ -136,9 +141,19 @@ elseif install_option == "default-packages" then
 
     os.execute(string.format(
         [[
-sudo -u %s yay -S --noconfirm cpupower cpupower-gui]],
+sudo -u %s yay -S --noconfirm cpupower cpupower-gui nitch flameshot]],
         user_name
     ))
+
+    print("\n\nInstall laptop specific packages? [N]")
+    local input = io.read()
+    if string.lower(input) == "y" then
+        os.execute(string.format(
+            [[
+sudo -u %s yay -S --noconfirm brightnessctl]],
+            user_name
+        ))
+    end
 elseif install_option == "configs" then
     if not has_access() then
         print("Please run the script with superuser access.\nExiting...")
@@ -192,17 +207,9 @@ elseif install_option == "test" then
         os.exit()
     end
 
-    os.execute(string.format(
-        [[
-sudo -u %s yay -S pod2man --needed --noconfirm
-su %s -c "git clone https://github.com/bmg-c/lemonbar
-cd ./lemonbar
-chmod +x ./bar/*
-mkdir ~/scripts/bar
-cp ./bar/* ~/scripts/bar/"
-cd ./lemonbar
-make clean install]],
-        user_name,
-        user_name
-    ))
+    print("\n\nInstall laptop specific packages? [N]")
+    local input = io.read()
+    if string.lower(input) == "y" then
+        print(input)
+    end
 end
