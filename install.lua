@@ -81,9 +81,16 @@ elseif install_option == "dwm" then
         os.exit()
     end
 
+    os.execute(
+        string.format(
+            [[
+sudo -u %s yay -S --noconfirm --needed picom-ibhagwan-git feh yajl pod2man flameshot nitch cpupower cpupower-gui brightnessctl]],
+            user_name
+        )
+    )
+
     os.execute(string.format(
         [[
-pacman -S yajl --needed --noconfirm
 su %s -c "git clone https://github.com/bmg-c/dwm
 cd ./dwm
 chmod +x ./startup.sh
@@ -112,7 +119,6 @@ make clean install]],
 
     os.execute(string.format(
         [[
-sudo -u %s yay -S pod2man --needed --noconfirm
 su %s -c "git clone https://github.com/bmg-c/lemonbar
 cd ./lemonbar
 chmod +x ./bar/*
@@ -121,12 +127,6 @@ cp ./bar/* ~/scripts/bar/"
 cd ./lemonbar
 make clean install]],
         user_name,
-        user_name
-    ))
-
-    os.execute(string.format(
-        [[
-sudo -u %s yay -S --noconfirm --needed picom-ibhagwan-git]],
         user_name
     ))
 elseif install_option == "default-packages" then
